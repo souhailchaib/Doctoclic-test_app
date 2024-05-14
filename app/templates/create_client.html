@@ -1,0 +1,175 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Add Client{% endblock %}
+
+
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Add Client Form</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Add Client Form</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Add New Client</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- First Column -->
+                                        <div class="form-group">
+                                            {{ form.client_num_dossier.label_tag }}
+                                            {{ form.client_num_dossier }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_num.label_tag }}
+                                            {{ form.client_num }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_nom.label_tag }}
+                                            {{ form.client_nom }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_prenom.label_tag }}
+                                            {{ form.client_prenom }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_nom_prenom.label_tag }}
+                                            {{ form.client_nom_prenom }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_prenom_nom.label_tag }}
+                                            {{ form.client_prenom_nom }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_mail.label_tag }}
+                                            {{ form.client_mail }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_telephone.label_tag }}
+                                            {{ form.client_telephone }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_type.label_tag }}
+                                            {{ form.client_type }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_datenaissance.label_tag }}
+                                            {{ form.client_datenaissance }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_uuid.label_tag }}
+                                            {{ form.client_uuid }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_code_postale.label_tag }}
+                                            {{ form.client_code_postale }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_language.label_tag }}
+                                            {{ form.client_language }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Second Column -->
+                                        <div class="form-group">
+                                            {{ form.client_commentaire.label_tag }}
+                                            {{ form.client_commentaire }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_langue_res.label_tag }}
+                                            {{ form.client_langue_res }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_commune.label_tag }}
+                                            {{ form.client_commune }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_medref.label_tag }}
+                                            {{ form.client_medref }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_cin.label_tag }}
+                                            {{ form.client_cin }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_ville.label_tag }}
+                                            {{ form.client_ville }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_adresse.label_tag }}
+                                            {{ form.client_adresse }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_profession.label_tag }}
+                                            {{ form.client_profession }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_sexe.label_tag }}
+                                            {{ form.client_sexe }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_provenance.label_tag }}
+                                            {{ form.client_provenance }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_id_externe.label_tag }}
+                                            {{ form.client_id_externe }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_ref_mutuelle_externe.label_tag }}
+                                            {{ form.client_ref_mutuelle_externe }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.client_ref_compte_externe.label_tag }}
+                                            {{ form.client_ref_compte_externe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+{% endblock %}

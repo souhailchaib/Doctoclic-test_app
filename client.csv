@@ -1,0 +1,13 @@
+id;client_num_dossier;client_num;client_nom;client_prenom;client_nom_prenom;client_prenom_nom;client_mail;client_telephone;client_type;client_datenaissance;client_uuid;client_code_postale;client_language;client_commentaire;client_langue_res;client_commune;client_medref;client_cin;client_ville;client_adresse;client_profession;client_sexe;client_provenance;client_id_externe;client_ref_mutuelle_externe;client_ref_compte_externe
+1;;784485371;DAOUDI;HASSAN;;;;6768960194;1;01/01/1963;22223230;20620;Français;;ARABE;Casablanca;TEST;;;;;1;;;;
+2;0034543D;784485372;IBRAHIMI;ABDELLATIF;;;;6768960195;0;16/11/1967;22223231;20620;Français;;ARABE;Casablanca;TEST;;;;;1;;;;
+3;0034544SD3;784485373;OUSSAMA;ABDERRAZAK;;;;6768960196;1;07/02/1969;22223232;20620;Français;TEST;ARABE;Casablanca;DDD;BB174489;Torquay;Tor Church Rd;DOC;1;Instagram;8837632;DZ2E2;E2E2E2
+4;;784485374;SADRI;MOUSSA;;;;6768960197;0;01/03/1965;22223233;20620;Français;;ARABE;Casablanca;;BB174490;Torquay;Tor Church Rd;DOC;1;Instagram;8837633;DZ2E3;E2E2E3
+5;;784485375;SIDRINE;SEDDIK;;;;6768960198;1;05/08/1951;22223234;20620;Français;;ARABE;Casablanca;;BB174491;Torquay;Tor Church Rd;DOC;1;Instagram;8837634;DZ2E4;E2E2E4
+6;;784485376;HAMMADI;MOHAMED;;;;6768960199;1;02/03/1956;22223235;20620;Français;;ARABE;Casablanca;;BB174492;Torquay;Tor Church Rd;DOC;1;Instagram;8837635;DZ2E5;E2E2E5
+7;;784485377;HAIZOUN;OMAR;;;;6768960200;0;29/04/1952;22223236;20620;Français;;ARABE;Casablanca;;BB174493;Torquay;Tor Church Rd;DOC;1;Instagram;8837636;DZ2E6;E2E2E6
+8;;784485378;BYOUZ;SAMIRA;;;;6768960201;0;31/08/1963;22223237;20620;Français;;ARABE;Casablanca;;BB174494;Torquay;Tor Church Rd;DOC;1;Instagram;8837637;DZ2E7;E2E2E7
+9;;784485379;NYA;MOHAMMED;;;;6768960202;0;01/01/1958;22223238;20620;Français;;ARABE;Casablanca;;BB174495;Torquay;Tor Church Rd;DOC;1;Instagram;8837638;DZ2E8;E2E2E8
+10;;784485380;LAGMOUCH;NAIMA;;;;6768960203;0;16/12/1960;22223239;20620;Français;;ARABE;Casablanca;;BB174496;Torquay;Tor Church Rd;DOC;1;Instagram;8837639;DZ2E9;E2E2E9
+11;;784485381;LAHLOU;ABDELHAQ;;;;6768960204;1;01/01/1965;22223240;20620;Français;;ARABE;Casablanca;;BB174497;Torquay;Tor Church Rd;DOC;1;Instagram;8837640;DZ2E10;E2E2E10
+12;;784485382;ABID;SOUKAINA;;;;6768960202;0;11/07/1959;22223241;20620;Français;;ARABE;Casablanca;;BB174498;Torquay;Tor Church Rd;DOC;1;Instagram;8837641;DZ2E11;E2E2E11

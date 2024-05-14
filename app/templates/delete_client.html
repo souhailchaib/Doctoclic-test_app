@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Delete Client{% endblock %}
+
+{% block content %}
+<h1>Delete Client</h1>
+<div class="card-body">
+    <p>Are you sure you want to delete {{ client.client_nom }} {{ client.client_prenom }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+{% endblock %}

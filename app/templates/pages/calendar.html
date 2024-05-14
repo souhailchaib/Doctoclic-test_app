@@ -1,0 +1,552 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Calendar {% endblock title %}
+
+{% block extrastyle %}
+  <!-- fullCalendar -->
+  <link rel="stylesheet"  href="{% static 'plugins/fullcalendar/main.css' %}">
+  <link rel="stylesheet"  href="{% static 'dist/css/dropdown.css' %}">
+
+{% endblock extrastyle %}
+
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Calendar</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Calendar</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-body p-0">
+                <!-- THE CALENDAR -->
+                <div id="calendar"></div>
+                <div class="modal fade" id="eventFormModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="eventForm">
+                          <div class="form-group autocomplete-container">
+                            <!-- Input field for autocomplete -->
+                            <label for="clientInput">Client Name:</label>
+                            <input type="text" id="clientInput" name="clientInput" class="form-control">
+                            <!-- Container for autocomplete dropdown -->
+                            <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
+                          </div>
+                          <div class="form-group">
+                            <label for="eventTitle">Title:</label>
+                            <input type="text" id="eventTitle" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label for="eventStart">Start:</label>
+                            <input type="datetime-local" id="eventStart" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label for="eventEnd">End:</label>
+                            <input type="datetime-local" id="eventEnd" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="eventAllDay">
+                              <label class="form-check-label" for="eventAllDay">All Day</label>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="deleteEvntBtn">Delete</button>
+                        <button type="button" class="btn btn-primary" id="saveEvntBtn">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}
+
+{% block extra_scripts %}
+<!-- jQuery UI -->
+<script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- fullCalendar 2.2.5 -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/fullcalendar/main.js' %}"></script>
+
+<!-- Page specific script -->
+
+
+
+<script>
+
+$(document).ready(function() {
+    // Function to show autocomplete dropdown
+    function showAutocompleteDropdown(data) {
+        var dropdown = $('#autocompleteDropdown');
+        dropdown.empty(); // Clear previous suggestions
+
+        // Add new suggestions to the dropdown
+        $.each(data, function(index, item) {
+            dropdown.append('<div class="autocomplete-item">' + item + '</div>');
+        });
+
+        // Show the dropdown below the input field
+        dropdown.show();
+    }
+
+    // Initialize Autocomplete widget on the input field
+    $('#clientInput').on('input', function() {
+        var searchTerm = $(this).val();
+
+        // Make AJAX request to fetch autocomplete suggestions
+        $.ajax({
+            url: 'get_client', // Endpoint to fetch clients from the backend
+            dataType: 'json',
+            data: { term: searchTerm },
+            success: function(data) {
+                // Show the autocomplete dropdown with the fetched suggestions
+                showAutocompleteDropdown(data);
+            }
+        });
+    });
+
+    // Hide the autocomplete dropdown when clicking outside the input field
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#autocompleteDropdown').length) {
+            $('#autocompleteDropdown').hide();
+        }
+    });
+
+    // Handle click on autocomplete suggestion
+    $(document).on('click', '.autocomplete-item', function() {
+        var selectedValue = $(this).text();
+        $('#clientInput').val(selectedValue);
+        $('#autocompleteDropdown').hide();
+    });
+});
+
+
+    /* initialize the calendar */
+var date = new Date();
+var d = date.getDate();
+var m = date.getMonth();
+var y = date.getFullYear();
+
+var Calendar = FullCalendar.Calendar;
+var Draggable = FullCalendar.Draggable;
+
+var calendarEl = document.getElementById('calendar');
+
+var calendar = new Calendar(calendarEl, {
+    headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+
+    themeSystem: 'bootstrap',
+    initialView: 'timeGridWeek',
+    events: '/get_events/', // Endpoint to fetch events from the backend,
+    editable: true,
+    droppable: true,
+    drop: function(info) {
+        if (checkbox.checked) {
+            info.draggedEl.parentNode.removeChild(info.draggedEl);
+        }
+    },
+
+    eventClick: showEventForm,
+    dateClick: ShowDateEvent,
+
+});
+
+calendar.render();
+
+
+$(document).ready(function() {
+    // Event delegation for the "All Day" checkbox
+    $(document).on('change', '#eventAllDay', function() {
+        if ($(this).is(':checked')) {
+            // If checkbox is checked, set the start and end time inputs to disabled
+            $('#eventStart, #eventEnd').prop('disabled', true);
+        } else {
+            // If checkbox is unchecked, set the start and end time inputs to enabled
+            $('#eventStart, #eventEnd').prop('disabled', false);
+        }
+    });
+  });
+
+
+
+function ShowDateEvent(info) {
+    // Open the event form modal here
+    $('#eventFormModal').modal('show');
+
+    // Populate the start date in the form
+    // Format the date to match datetime-local input format (YYYY-MM-DDTHH:MM)
+    var startDate = info.date.toISOString().slice(0, 16);
+    $('#eventStart').val(startDate);
+
+     // Check if the title property is available
+     var title = info.event ? info.event.title : '';
+    $('#eventTitle').val(title);
+
+    // Set end date if available
+    var endDate = info.event.end ? info.event.end.toISOString().slice(0, 16) : '';
+    $('#eventEnd').val(endDate);
+
+    // Set allDay checkbox if available
+    var allDay = info.event.allDay;
+    $('#eventAllDay').prop('checked', allDay);
+
+    $('#saveEvntBtn').off('click').on('click', function() {
+        // Get values from form fields
+        var formData = {
+            title: $('#eventTitle').val(),
+            start: $('#eventStart').val(),
+            end: $('#eventEnd').val(),
+            allDay: $('#eventAllDay').prop('checked')
+        };
+
+        // Send formData to server
+        sendEventData(formData);
+    });
+}
+
+function showEventForm(info) {
+    var event = info.event;
+    var eventId = event.id;
+    console.log(eventId)
+
+    // Send AJAX request to fetch event details
+    $.ajax({
+        url: '/get_event/',
+        type: 'GET',
+        data: {
+            'event_id': eventId
+        },
+        success: function(response) {
+
+          console.log('Clicked event ID:', eventId);
+            var eventData = response.event_data;
+
+            if (eventData.allDay) {
+                    $('#eventStart, #eventEnd').prop('disabled', true);
+                } else {
+                    // Otherwise, enable start and end time inputs
+                    $('#eventStart, #eventEnd').prop('disabled', false);
+                }
+
+            var startDate = new Date(eventData.start);
+            var startDateString = startDate.toISOString().slice(0, 16);
+            $('#eventStart').val(startDateString);
+
+            // Convert end date to format yyyy-MM-ddThh:mm
+            var endDate = eventData.end ? new Date(eventData.end) : new Date(startDate);
+            var endDateString = endDate.toISOString().slice(0, 16);
+            $('#eventEnd').val(endDateString);
+            // Populate form fields with event data
+            $('#eventTitle').val(eventData.title);
+            $('#eventAllDay').prop('checked', eventData.allDay);
+            // Store the event ID in the modal data attribute
+            $('#eventFormModal').data('event_id', eventId);
+            // Show the modal
+            $('#eventFormModal').modal('show');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching event details:', error);
+        }
+    });
+
+    // Event handlers for save and delete buttons
+
+    $('#saveEvntBtn').off('click').on('click', function() {
+        // Get values from form fields
+        var formData = {
+            id:eventId,
+            title: $('#eventTitle').val(),
+            start: $('#eventStart').val(),
+            end: $('#eventEnd').val(),
+            allDay: $('#eventAllDay').prop('checked')
+        };
+
+        // Send formData to server
+        updateEventData(formData);
+        // Reload the current page
+    });
+    $('#deleteEvntBtn').off('click').on('click', function() {
+        deleteEvent(eventId);
+        // Reload the current page
+    });
+}
+
+// Establish WebSocket connection
+const socket = new WebSocket('ws://127.0.0.1:8000/ws/calendar/');
+
+// Event handler for WebSocket connection open
+socket.onopen = function(event) {
+    console.log('WebSocket connection opened');
+    socket.send(JSON.stringify({ action: 'join_group', group: 'calendar' }));
+};
+
+// Event handler for WebSocket message received
+socket.onmessage = function(event) {
+    const message = JSON.parse(event.data);
+    console.log('Message received:', message);
+
+    if (message.action === 'event_created') {
+        calendar.addEvent({
+            title: message.data.title,
+            start: message.data.start,
+            end: message.data.end,
+            allDay: message.data.allDay,
+            // Add other event properties as needed
+        });
+    } else if (message.action === 'event_updated') {
+        // Find and update the event in the calendar
+        const updatedEvent = calendar.getEventById(message.data.id);
+        updateEventData(message.data);
+
+    } else if (message.action === 'event_deleted') {
+        // Find and remove the event from the calendar
+        const deletedEvent = calendar.getEventById(message.data.id);
+        if (deletedEvent) {
+            deletedEvent.remove();
+        }
+    }
+
+    // Refetch events after adding, updating, or deleting
+    calendar.refetchEvents();
+};
+
+function updateEventData(formData) {
+    const eventId = formData.id; // Assuming formData includes the event ID
+    const updatedEvent = calendar.getEventById(eventId);
+
+    if (updatedEvent) {
+        // Update event properties based on the formData
+        updatedEvent.setProp('title', formData.title);
+        updatedEvent.setStart(formData.start);
+        updatedEvent.setEnd(formData.end);
+        updatedEvent.setAllDay(formData.allDay);
+
+        // Send the updated event data to the server
+        const message = {
+            action: 'update_event',
+            data: formData
+        };
+        socket.send(JSON.stringify(message));
+    } else {
+        console.error('Event not found:', eventId);
+    }
+}
+
+
+// Function to send event data via WebSocket
+function sendEventData(formData) {
+    const message = {
+        action: 'event_created', // or 'update_event' depending on the scenario
+        data: formData
+    };
+    // Send formData to server via WebSocket
+    socket.send(JSON.stringify(message));
+}
+
+$('#saveEvntBtn').off('click').on('click', function() {
+        // Get values from form fields
+        var formData = {
+            title: $('#eventTitle').val(),
+            start: $('#eventStart').val(),
+            end: $('#eventEnd').val(),
+            allDay: $('#eventAllDay').prop('checked')
+        };
+
+        // Send formData to server
+        sendEventData(formData);
+    });
+
+
+
+function deleteEvent(eventId) {
+    const message = {
+        action: 'delete_event',
+        data: {
+            id: eventId
+        }
+    };
+    socket.send(JSON.stringify(message));
+}
+
+
+// Event handler for WebSocket connection close
+socket.onclose = function(event) {
+    console.log('WebSocket connection closed');
+};
+
+// function updateEvent(info) {
+
+//     var event = info.event;
+//     var eventId = event.id
+//     var title = $('#eventTitle').val();
+//     var start = $('#eventStart').val();
+//     var end = $('#eventEnd').val();
+//     var allDay = $('#eventAllDay').prop('checked');
+
+//     // Assuming you have the event ID stored in a data attribute of the modal
+
+//     $.ajax({
+//         url: '/update_event/',
+//         type: 'POST',
+//         headers: {
+//             'X-CSRFToken': '{{ csrf_token }}'
+//         },
+//         data: {
+//             'event_id': eventId,
+//             'title': title,
+//             'start': start,
+//             'end': end,
+//             'allDay': allDay
+//         },
+//         success: function(response) {
+//             console.log('Event updated successfully:', response);
+//             // Update the event object in the calendar with the new data
+//             info.event.setProp('title', title);
+//             info.event.setStart(start);
+//             info.event.setEnd(end);
+//             info.event.setExtendedProp('allDay', allDay);
+//             // Close the modal or perform any other actions
+//             $('#eventFormModal').modal('hide');
+
+//             // Optionally, rerender or refresh the calendar to reflect the changes
+//         },
+//         error: function(xhr, status, error) {
+//             console.error('Error updating event:', error);
+//         }
+//     });
+// }
+
+// function saveEvent(info) {
+
+//     var title = $('#eventTitle').val();
+//     var start = $('#eventStart').val();
+//     var end = $('#eventEnd').val();
+//     var allDay = $('#eventAllDay').prop('checked');
+
+//     var eventData = {
+
+//         title: title,
+//         start: start,
+//         end: end,
+//         allDay: allDay,
+//     };
+
+//     $.ajax({
+//         url: '/save_event/',
+//         type: 'POST',
+//         headers: {
+//             'X-CSRFToken': '{{ csrf_token }}'
+//         },
+//         data: eventData,
+//         success: function(response) {
+//             console.log('Event saved successfully:', response);
+
+//             // Close the modal
+//             $('#eventFormModal').modal('hide');
+
+//             // Add new event to calendar
+
+//             var newEvent = {
+//                 title: title,
+//                 start: start,
+//                 end: end,
+//                 allDay: allDay
+//             };
+
+//             calendar.addEvent(newEvent);
+//         },
+//         error: function(xhr, status, error) {
+//             console.error('Error saving event:', error);
+//         }
+//     });
+// }
+
+
+//   function deleteEvent(info) {
+//       var event = info.event;
+//       var eventId = event.id;
+
+//     if (!eventId) {
+//         console.error('Event ID is missing or invalid.');
+//         return;
+//     }
+
+//       $.ajax({
+//           url: '/delete_event/',
+//           type: 'POST',
+//           headers: {
+//               'X-CSRFToken': '{{ csrf_token }}'
+//           },
+//           data: {
+//               'event_id': eventId
+//           },
+//           success: function(response) {
+//               console.log('Event deleted successfully:', response);
+//               // Remove the event from the calenda
+//               info.event.remove();
+//           },
+//           error: function(xhr, status, error) {
+//               console.error('Error deleting event:', error);
+//           }
+//       });
+//   }
+
+
+// $(function () {
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+
+//   console.log('Clicked event ID:', event.id);
+
+
+// });
+
+//   })
+
+</script>
+{% endblock extra_scripts %}

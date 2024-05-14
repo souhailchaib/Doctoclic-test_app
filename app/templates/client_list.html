@@ -1,0 +1,205 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Client List {% endblock title %}
+
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+{% endblock extrastyle %}
+
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Client List</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Client List</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">DataTable with default features</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Num Dossier</th>
+                            <th>Num</th>
+                            <th>Nom</th>
+                            <th>Prenom</th>
+                            <th>Nom Prenom</th>
+                            <th>Prenom Nom</th>
+                            <th>Mail</th>
+                            <th>Telephone</th>
+                            <th>Type</th>
+                            <th>Date Naissance</th>
+                            <th>UUID</th>
+                            <th>Code Postale</th>
+                            <th>Language</th>
+                            <th>Commentaire</th>
+                            <th>Langue Res</th>
+                            <th>Commune</th>
+                            <th>Medref</th>
+                            <th>CIN</th>
+                            <th>Ville</th>
+                            <th>Adresse</th>
+                            <th>Profession</th>
+                            <th>Sexe</th>
+                            <th>Provenance</th>
+                            <th>Client ID Externe</th>
+                            <th>Ref Mutuelle Externe</th>
+                            <th>Ref Compte Externe</th>
+                            <th>Actions</th> <!-- New column for edit and delete buttons -->
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+</div>
+<!-- /.content-wrapper -->
+{% endblock content %}
+{% block extra_scripts %}
+
+
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+
+
+<script>
+    $(document).ready(function () {
+        var table = $('#example1').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "get_client/",  // This should match the URL configured in your Django urls.py for the getdata method of ClientListView
+                "type": "GET",
+                "data": function (d) {
+                // Customize the AJAX request data here
+                    console.log("DataTables AJAX request parameters:", d);
+                    return d;
+            }},
+            "columns": [
+            {"data":"client_id"},
+            { "data": "client_num_dossier" },
+            { "data": "client_num" },
+            { "data": "client_nom" },
+            { "data": "client_prenom" },
+            { "data": "client_nom_prenom" },
+            { "data": "client_prenom_nom" },
+            { "data": "client_mail" },
+            { "data": "client_telephone" },
+            { "data": "client_type" },
+            { "data": "client_datenaissance" },
+            { "data": "client_uuid" },
+            { "data": "client_code_postale" },
+            { "data": "client_language" },
+            { "data": "client_commentaire" },
+            { "data": "client_langue_res" },
+            { "data": "client_commune" },
+            { "data": "client_medref" },
+            { "data": "client_cin" },
+            { "data": "client_ville" },
+            { "data": "client_adresse" },
+            { "data": "client_profession" },
+            { "data": "client_sexe" },
+            { "data": "client_provenance" },
+            { "data": "client_id_externe" },
+            { "data": "client_ref_mutuelle_externe" },
+            { "data": "client_ref_compte_externe" },
+            {"data": null,
+
+                    "render": function(data, type, row) {
+                        // Add edit and delete buttons
+                        return '<button class="edit-btn" data-id="' + row.client_id + '">Edit</button>'+
+                        '<button class="delete-btn" data-id="' + row.client_id + '">Delete</button>';
+                    }}],
+        "paging": true,
+        "lengthChange": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        });
+
+        // Edit button click event
+
+        $('#example1 tbody').on('click', '.edit-btn', function() {
+        var clientId = $(this).data('id');
+        var editUrl = "{% url 'update_client' 0 %}".replace('0', clientId);
+        window.location.href = editUrl;
+        });
+
+        // Delete button click event
+
+        $('#example1 tbody').on('click', '.delete-btn', function () {
+            var clientId = $(this).data('id');
+
+            // Show confirmation dialog
+            var confirmed = confirm("Are you sure you want to delete this client?");
+
+            // If user confirms, submit the form to delete the client
+            if (confirmed) {
+                var deleteUrl = "{% url 'delete_client' 0 %}".replace('0', clientId);
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        // Refresh the datatable or update the page as needed
+                        location.reload(); // Example: Refresh the page
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
+
+
+</script>
+
+
+</script>
+
+{% endblock extra_scripts %}
