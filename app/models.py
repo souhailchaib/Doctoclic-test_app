@@ -2,6 +2,14 @@ from django.db import models
 
 # Create your models here.
 
+from django.db import models
+
+class MedecinModel(models.Model):
+    nom = models.CharField(max_length=100)
+    prenom = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.prenom} {self.nom}'
 
 class ClientModel(models.Model):
 
@@ -91,13 +99,14 @@ class ClientModel(models.Model):
 
 
 class CalendarEvent(models.Model):
-    # client=models.ForeignKey(ClientModel,on_delete=models.CASCADE)
+    client=models.ForeignKey(ClientModel,on_delete=models.CASCADE,default=2)
     title = models.CharField(max_length=100)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField(null=True, blank=True)
     all_day = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    medecin = models.ForeignKey(MedecinModel,on_delete=models.CASCADE,default=1)
 
     def __str__(self):
         return self.title

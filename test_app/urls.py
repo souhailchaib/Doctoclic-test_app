@@ -13,6 +13,7 @@ from app.Events.Views.DeleteEvent import DeleteEvent
 from app.Events.Views.SaveEvent import SaveEvent
 from app.Events.Views.UpdateEvent import UpdateEvent
 from app.Events.Views.GetClientsName import GetClientsName
+from app.Events.Views.GetMedecinName import GetMedecinName
 
 from app.Events.Views.CalendarEventListCreate import CalendarEventListCreate
 
@@ -23,11 +24,14 @@ from app.Clients.Views.UpdateClient import UpdateClient
 from app.Clients.Views.DeleteClient import DeleteClient
 
 
+
 urlpatterns = [
     path("get_events/", GetEvents.as_view(), name="get_events"),
     path("calendar/get_events/", CalendarEventListCreate.as_view(), name="get_events"),
     path("calendar/", GetCalendar.as_view(), name="examples_calendar"),
     path("calendar/get_client/", GetClientsName.as_view(), name="calendar_client"),
+    path("calendar/get_medecin/", GetMedecinName.as_view(), name="calendar_medecin"),
+
     path("get_event/", GetEvent.as_view(), name="get_event"),
     path("save_event/", SaveEvent.as_view(), name="save"),
     path("delete_event/", DeleteEvent.as_view(), name="delete_event"),

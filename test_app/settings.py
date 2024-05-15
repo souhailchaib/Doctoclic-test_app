@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "faker",
     "redis",
     "daphne",
     "app",
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_seed",
-    "faker",
     "django_serverside_datatable",
     "rest_framework",
     "django_celery_results",
