@@ -5,7 +5,6 @@ from .models import MedecinModel
 admin.site.register(MedecinModel)
 
 
-
 @admin.register(ClientModel)
 class ClientAdmin(admin.ModelAdmin):
     list_display = (
@@ -92,4 +91,3 @@ class ClientAdmin(admin.ModelAdmin):
         "client_ref_mutuelle_externe",
         "client_ref_compte_externe",
     )
-

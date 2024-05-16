@@ -4,7 +4,7 @@ import random
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'test_app.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_app.settings")
 django.setup()
 
 fake = Faker()
@@ -12,6 +12,7 @@ fake = Faker()
 # Function to get a random choice from a tuple
 def random_choice(choices):
     return random.choice([choice[0] for choice in choices])
+
 
 # Create 2000 clients with all fields filled
 for _ in range(2000):
@@ -41,7 +42,7 @@ for _ in range(2000):
         client_provenance=random_choice(ClientModel.CLIENT_PROVENANCE),
         client_id_externe=fake.random_number(digits=8),
         client_ref_mutuelle_externe=fake.random_number(digits=8),
-        client_ref_compte_externe=fake.random_number(digits=8)
+        client_ref_compte_externe=fake.random_number(digits=8),
     )
 
 print("2000 clients have been created with all fields filled.")

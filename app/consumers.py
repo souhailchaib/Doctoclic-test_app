@@ -8,6 +8,7 @@ import datetime
 
 create_event_async = sync_to_async(CalendarEvent.objects.create)
 
+
 class EventConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
@@ -18,8 +19,8 @@ class EventConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print (text_data)
-        print (data)
+        print(text_data)
+        print(data)
         action = data.get("action")
 
         if action == "event_created":
@@ -30,7 +31,7 @@ class EventConsumer(AsyncWebsocketConsumer):
             await self.delete_event(data["data"])
 
     async def create_event(self, data):
-        
+
         title = data.get("title")
         start = data.get("start")
         end = (
@@ -45,7 +46,12 @@ class EventConsumer(AsyncWebsocketConsumer):
             client = await sync_to_async(ClientModel.objects.get)(id=client_id)
             medecin = await sync_to_async(MedecinModel.objects.get)(id=medecin_id)
             event = await create_event_async(
-                client=client,title=title, start_date=start, end_date=end, all_day=all_day , medecin=medecin
+                client=client,
+                title=title,
+                start_date=start,
+                end_date=end,
+                all_day=all_day,
+                medecin=medecin,
             )
             event_data = {
                 "client_id": client_id,  # Include client_id in the event data
@@ -57,7 +63,7 @@ class EventConsumer(AsyncWebsocketConsumer):
                 "medecin_id": medecin_id,
             }
 
-            print (event_data)
+            print(event_data)
             await self.channel_layer.group_send(
                 "calendar",
                 {

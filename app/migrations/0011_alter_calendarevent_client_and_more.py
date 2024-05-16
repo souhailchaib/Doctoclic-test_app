@@ -7,18 +7,26 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0010_alter_calendarevent_client'),
+        ("app", "0010_alter_calendarevent_client"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='calendarevent',
-            name='client',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='app.clientmodel'),
+            model_name="calendarevent",
+            name="client",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.clientmodel",
+            ),
         ),
         migrations.AlterField(
-            model_name='calendarevent',
-            name='medecin',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='app.medecinmodel'),
+            model_name="calendarevent",
+            name="medecin",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.medecinmodel",
+            ),
         ),
     ]

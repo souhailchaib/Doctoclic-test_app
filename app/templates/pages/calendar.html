@@ -128,7 +128,7 @@ function populateMedicDropdown() {
         success: function(data) {
             var medicSelect = $('#medecinSelect');
             medicSelect.empty(); // Clear previous options
-            
+
             // Iterate through the received data (assuming each item is an object with 'id' and 'name' properties)
             $.each(data, function(index, medecin) {
                 // Append an option element with the medic's name as the displayed text
@@ -150,7 +150,7 @@ $(document).ready(function() {
 $('#medecinSelect').on('change', function() {
     // Retrieve the selected medic ID
     var medecinId = $(this).val();
-    
+
     // Log the selected medic ID (for demonstration purposes)
     console.log('Selected medic ID:', medecinId);
     // You can now use the selected medic ID when creating the event
@@ -163,7 +163,7 @@ function populateClientDropdown() {
         success: function(data) {
             var clientSelect = $('#clientInput');
             clientSelect.empty(); // Clear previous options
-            
+
             // Iterate through the received data (assuming each item is an object with 'id' and 'name' properties)
             $.each(data, function(index, client) {
                 // Append an option element with the client's name as the displayed text
@@ -185,7 +185,7 @@ $(document).ready(function() {
 $('#clientSelect').on('change', function() {
     // Retrieve the selected client ID
     var clientId = $(this).val();
-    
+
     // Log the selected client ID (for demonstration purposes)
     console.log('Selected client ID:', clientId);
     // You can now use the selected client ID when creating the event
